@@ -17,6 +17,8 @@ public class TestsWithTraces : PageTest
             Snapshots = true,
             Sources = true
         });
+
+        await Page.GotoAsync("https://playwright.dev");
     }
 
     [TearDown]
@@ -35,12 +37,28 @@ public class TestsWithTraces : PageTest
     [Test]
     public async Task GetStartedLink()
     {
-        await Page.GotoAsync("https://playwright.dev");
-
         // Click the get started link.
         await Page.GetByRole(AriaRole.Link, new() { Name = "Get started" }).ClickAsync();
 
         // Expects page to have a heading with the name of Installation.
         await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Installation" })).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task LearnVideosLink()
+    {
+        await Page.Locator("footer").ScrollIntoViewIfNeededAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Learn Videos" }).ClickAsync();
+
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Learn Videos" })).ToBeVisibleAsync();
+    }
+
+    [Test]
+    public async Task FeatureVideosCorrectLink()
+    {
+        await Page.Locator("footer").ScrollIntoViewIfNeededAsync();
+
+        await Expect(Page.GetByRole(AriaRole.Link, new() { Name = "Feature Videos" })).ToHaveAttributeAsync("href", "/community/feature-videos");
     }
 }
